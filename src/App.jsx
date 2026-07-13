@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { supabase } from './supabase'
 import Login from './pages/Login'
+import ResetPassword from './pages/ResetPassword'
 import Dashboard from './pages/Dashboard'
 import Perfil from './pages/Perfil'
 import Fotos from './pages/Fotos'
@@ -65,6 +66,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={business ? <Navigate to="/panel" replace /> : <Login />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/" element={<Navigate to="/panel" replace />} />
         <Route path="/panel" element={
           <ProtectedRoute business={business} checking={checking}>
