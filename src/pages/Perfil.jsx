@@ -19,6 +19,7 @@ export default function Perfil({ business, onUpdate }) {
     website: business?.website || '',
     lat: business?.lat || '',
     lng: business?.lng || '',
+    maps_url: business?.maps_url || '',
   })
   const [saving, setSaving] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -61,6 +62,7 @@ export default function Perfil({ business, onUpdate }) {
         website: form.website,
         lat: form.lat ? parseFloat(form.lat) : null,
         lng: form.lng ? parseFloat(form.lng) : null,
+        maps_url: form.maps_url,
       })
       .eq('id', business.id)
 
@@ -82,17 +84,16 @@ export default function Perfil({ business, onUpdate }) {
 
       <form onSubmit={handleSave} className="max-w-2xl space-y-6">
         <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-          <h2 className="font-heading font-bold text-brand-navy text-base mb-5">Información general</h2>
-          <div className="space-y-4">
+            <h2 className="font-heading font-bold text-brand-navy text-base mb-2">Ubicación en mapa</h2>
+            <p className="font-body text-gray-400 text-xs mb-4">
+              Busca tu negocio en Google Maps, dale click a "Compartir" y copia el enlace aquí.
+            </p>
             <div>
-              <label className="font-body text-sm font-medium text-gray-700 block mb-1.5">Descripción</label>
-              <textarea
-                name="description" value={form.description} onChange={handleChange} rows={4}
-                placeholder="Describe tu establecimiento..."
-                className="w-full px-4 py-3 font-body text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-brand-orange resize-none"
-              />
+              <label className="font-body text-sm font-medium text-gray-700 block mb-1.5">Enlace de Google Maps</label>
+              <input name="maps_url" value={form.maps_url} onChange={handleChange} placeholder="https://maps.app.goo.gl/..."
+                className="w-full px-4 py-3 font-body text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-brand-orange" />
             </div>
-            <div>
+          </div>
               <label className="font-body text-sm font-medium text-gray-700 block mb-1.5">Categoría</label>
               <select name="category_id" value={form.category_id} onChange={handleChange}
                 className="w-full px-4 py-3 font-body text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-brand-orange">
