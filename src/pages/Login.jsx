@@ -7,6 +7,7 @@ export default function Login() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [resetSent, setResetSent] = useState(false)
 
   async function handleLogin(e) {
     e.preventDefault()
@@ -15,6 +16,19 @@ export default function Login() {
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) setError('Credenciales incorrectas. Verifica tu correo y contraseña.')
     setLoading(false)
+  }
+
+  async function handleForgotPassword() {
+    if (!email) {
+      setError('Escribe tu correo arriba primero, y luego dale click a "¿Olvidaste tu contraseña?".')
+      return
+    }
+    setError('')
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: 'https://cupones593-negocio.netlify.app/reset-password',
+    })
+    if (error) setError('No pudimos enviar el correo. Verifica que el correo esté bien escrito.')
+    else setResetSent(true)
   }
 
   return (
@@ -52,12 +66,22 @@ export default function Login() {
               {loading ? 'Iniciando sesión...' : 'Entrar al panel'}
             </button>
           </form>
-          <p className="font-body text-gray-400 text-xs text-center mt-6 leading-relaxed">
-            ¿No tienes acceso o perdiste tu contraseña?{' '}
-            <a href={WA_URL('Hola, necesito ayuda con el acceso a mi panel de Cupones593.')} className="text-brand-emerald hover:underline">
-              Escríbenos por WhatsApp
-            </a>
+          <p className="font-body text-gray-400 text-xs text-center mt-4">
+          <button type="button" onClick={handleForgotPassword} className="text-brand-emerald hover:underline font-medium">
+            ¿Olvidaste tu contraseña?
+          </button>
+        </p>
+        {resetSent && (
+          <p className="font-body text-emerald-600 text-xs text-center mt-3 bg-emerald-50 rounded-xl px-4 py-3">
+            Te enviamos un correo con el enlace para crear una nueva contraseña.
           </p>
+        )}
+        <p className="font-body text-gray-400 text-xs text-center mt-4 leading-relaxed">
+          ¿No tienes acceso todavía?{' '}
+          <a href={WA_URL('Hola, necesito ayuda con el acceso a mi panel de Cupones593.')} className="text-brand-emerald hover:underline">
+            Escríbenos por WhatsApp
+          </a>
+        </p>
         </div>
       </div>
     </div>
