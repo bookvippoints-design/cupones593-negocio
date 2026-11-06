@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { supabase } from './supabase'
-import Login from './pages/Login'
+import { supabase, consumeLoginHandoff, goToWebLogin } from './supabase'
 import ResetPassword from './pages/ResetPassword'
 import Dashboard from './pages/Dashboard'
 import Perfil from './pages/Perfil'
@@ -18,13 +17,17 @@ function ProtectedRoute({ business, checking, children }) {
   return children
 }
 
+function LoginRedirect() {
+  return goToWebLogin()
+}
+
 export default function App() {
   const [session, setSession] = useState(null)
   const [business, setBusiness] = useState(null)
   const [checking, setChecking] = useState(true)
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    consumeLoginHandoff().catch(() => {}).then(() => supabase.auth.getSession()).then(({ data: { session } }) => {
       setSession(session)
       if (session) fetchBusiness(session.user.email)
       else setChecking(false)
@@ -65,7 +68,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={business ? <Navigate to="/panel" replace /> : <Login />} />
+        <Route path="/login" element={business ? <Navigate to="/panel" replace /> : <LoginRedirect />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/" element={<Navigate to="/panel" replace />} />
         <Route path="/panel" element={
