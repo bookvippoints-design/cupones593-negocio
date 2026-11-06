@@ -84,16 +84,17 @@ export default function Perfil({ business, onUpdate }) {
 
       <form onSubmit={handleSave} className="max-w-2xl space-y-6">
         <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-            <h2 className="font-heading font-bold text-brand-navy text-base mb-2">Ubicación en mapa</h2>
-            <p className="font-body text-gray-400 text-xs mb-4">
-              Busca tu negocio en Google Maps, dale click a "Compartir" y copia el enlace aquí.
-            </p>
+          <h2 className="font-heading font-bold text-brand-navy text-base mb-5">Información general</h2>
+          <div className="space-y-4">
             <div>
-              <label className="font-body text-sm font-medium text-gray-700 block mb-1.5">Enlace de Google Maps</label>
-              <input name="maps_url" value={form.maps_url} onChange={handleChange} placeholder="https://maps.app.goo.gl/..."
-                className="w-full px-4 py-3 font-body text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-brand-orange" />
+              <label className="font-body text-sm font-medium text-gray-700 block mb-1.5">Descripción</label>
+              <textarea
+                name="description" value={form.description} onChange={handleChange} rows={4}
+                placeholder="Describe tu establecimiento..."
+                className="w-full px-4 py-3 font-body text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-brand-orange resize-none"
+              />
             </div>
-          </div>
+            <div>
               <label className="font-body text-sm font-medium text-gray-700 block mb-1.5">Categoría</label>
               <select name="category_id" value={form.category_id} onChange={handleChange}
                 className="w-full px-4 py-3 font-body text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-brand-orange">
@@ -153,8 +154,14 @@ export default function Perfil({ business, onUpdate }) {
         <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
           <h2 className="font-heading font-bold text-brand-navy text-base mb-2">Ubicación en mapa</h2>
           <p className="font-body text-gray-400 text-xs mb-4">
-            Abre Google Maps, busca tu establecimiento, clic derecho → "¿Qué hay aquí?" y copia las coordenadas.
+            Busca tu negocio en Google Maps, dale clic a "Compartir" y copia el enlace aquí.
           </p>
+          <div className="mb-4">
+            <label className="font-body text-sm font-medium text-gray-700 block mb-1.5">Enlace de Google Maps</label>
+            <input name="maps_url" value={form.maps_url} onChange={handleChange} placeholder="https://maps.app.goo.gl/..."
+              className="w-full px-4 py-3 font-body text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-brand-orange" />
+          </div>
+          <p className="font-body text-gray-400 text-xs mb-3">Opcional: coordenadas (solo si no tienes el enlace).</p>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="font-body text-sm font-medium text-gray-700 block mb-1.5">Latitud</label>
