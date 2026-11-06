@@ -22,7 +22,13 @@ export default function ResetPassword() {
     setLoading(true)
     const { error } = await supabase.auth.updateUser({ password })
     setLoading(false)
-    if (error) setError('No pudimos actualizar tu contraseña. El enlace pudo haber expirado, solicita uno nuevo desde el login.')
+    if (error) {
+      const code = error.code || ''
+      if (code === 'same_password') setError('La nueva contraseña debe ser distinta a la anterior.')
+      else if (code === 'weak_password') setError('La contraseña es muy débil. Usa al menos 8 caracteres con letras y números.')
+      else if (/session/i.test(code + ' ' + error.message)) setError('El enlace expiró. Solicita uno nuevo desde el inicio de sesión.')
+      else setError('No pudimos actualizar tu contraseña: ' + error.message)
+    }
     else setDone(true)
   }
 
