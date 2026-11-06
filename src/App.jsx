@@ -27,17 +27,25 @@ export default function App() {
   const [checking, setChecking] = useState(true)
 
   useEffect(() => {
-    consumeLoginHandoff().catch(() => {}).then(() => supabase.auth.getSession()).then(({ data: { session } }) => {
+    let subscription
+    let cancelled = false
+    ;(async () => {
+      // Primero recibimos la sesión que envía el login único (si viene),
+      // y solo después revisamos quién es el usuario.
+      await consumeLoginHandoff().catch(() => {})
+      if (cancelled) return
+      const { data: { session } } = await supabase.auth.getSession()
       setSession(session)
       if (session) fetchBusiness(session.user.email)
       else setChecking(false)
-    })
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-      if (session) fetchBusiness(session.user.email)
-      else { setBusiness(null); setChecking(false) }
-    })
-    return () => subscription.unsubscribe()
+      subscription = supabase.auth.onAuthStateChange((event, session) => {
+        if (event === 'INITIAL_SESSION') return
+        setSession(session)
+        if (session) fetchBusiness(session.user.email)
+        else { setBusiness(null); setChecking(false) }
+      }).data.subscription
+    })()
+    return () => { cancelled = true; subscription?.unsubscribe() }
   }, [])
 
   async function fetchBusiness(email) {
