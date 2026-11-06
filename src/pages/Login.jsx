@@ -25,7 +25,7 @@ export default function Login() {
     }
     setError('')
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'https://cupones593-negocio.netlify.app/reset-password',
+      redirectTo: window.location.origin + '/reset-password',
     })
     if (error) setError('No pudimos enviar el correo. Verifica que el correo esté bien escrito.')
     else setResetSent(true)
